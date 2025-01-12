@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة بيانات الأسرة</title>
+  <link rel="stylesheet" href="style.css">  <!-- رابط ملف CSS الخاص بك -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="title">إدارة بيانات الأسرة</h1>
+
+    <h3 class="data-title">البيانات المسجلة</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>رقم الهوية</th>
+          <th>اسم الزوج</th>
+          <th>رقم هوية الزوج</th>
+          <th>رقم الجوال</th>
+          <th>عدد الأفراد</th>
+          <th>الذكور</th>
+          <th>الإناث</th>
+          <th>أفراد أقل من 3 سنوات</th>
+          <th>من 3 إلى 5 سنوات</th>
+          <th>ذكور أقل من 16 سنة</th>
+          <th>إناث أقل من 16 سنة</th>
+          <th>ذكور أكثر من 16 سنة</th>
+          <th>إناث أكثر من 16 سنة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="membersTable">
+        <!-- البيانات ستظهر هنا -->
+      </tbody>
+    </table>
+    <form id="memberForm" class="form-container">
+        <div class="form-group">
+          <label for="name">الاسم</label>
+          <input type="text" id="name" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="national_id">رقم الهوية</label>
+          <input type="number" id="national_id" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="spouse_name">اسم الزوج</label>
+          <input type="text" id="spouse_name" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="spouse_national_id">رقم هوية الزوج</label>
+          <input type="number" id="spouse_national_id" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="phone_number">رقم الجوال</label>
+          <input type="text" id="phone_number" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="family_members">عدد الأفراد</label>
+          <input type="number" id="family_members" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="males">الذكور</label>
+          <input type="number" id="males" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="females">الإناث</label>
+          <input type="number" id="females" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="under_3_years">أفراد أقل من 3 سنوات</label>
+          <input type="number" id="under_3_years" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="from_3_to_5_years">من 3 سنوات إلى 5</label>
+          <input type="number" id="from_3_to_5_years" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="males_under_16">ذكور أقل من 16 سنة</label>
+          <input type="number" id="males_under_16" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="females_under_16">إناث أقل من 16 سنة</label>
+          <input type="number" id="females_under_16" class="form-input"required>
+        </div>
+        <div class="form-group">
+          <label for="males_above_16">ذكور أكثر من 16 سنة</label>
+          <input type="number" id="males_above_16" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="females_above_16">إناث أكثر من 16 سنة</label>
+          <input type="number" id="females_above_16" class="form-input" required>
+        </div>
+        <button type="submit" class="form-button">إضافة</button>
+      </form>
+      <!-- حقل البحث وزر البحث -->
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="أدخل رقم الهوية للبحث" class="form-input">
+    <button onclick="searchData()" class="bsearch">بحث</button>
+  </div>
+  
+  </div>
+  
+
+  <script>
+    // حفظ البيانات في الذاكرة
+    const members = JSON.parse(localStorage.getItem('members')) || [];
+
+    // دالة لعرض البيانات في الجدول
+    function displayData() {
+      const table = document.getElementById('membersTable');
+      table.innerHTML = '';
+      members.forEach((member, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${member.name}</td>
+          <td>${member.national_id}</td>
+          <td>${member.spouse_name}</td>
+          <td>${member.spouse_national_id}</td>
+          <td>${member.phone_number}</td>
+          <td>${member.family_members}</td>
+          <td>${member.males}</td>
+          <td>${member.females}</td>
+          <td>${member.under_3_years}</td>
+          <td>${member.from_3_to_5_years}</td>
+          <td>${member.males_under_16}</td>
+          <td>${member.females_under_16}</td>
+          <td>${member.males_above_16}</td>
+          <td>${member.females_above_16}</td>
+          <td>
+            <button onclick="editData(${index})"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteData(${index})"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    // دالة لإضافة البيانات
+    document.getElementById('memberForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nationalId = document.getElementById('national_id').value;
+
+      // التحقق من تكرار رقم الهوية
+      if (members.some(member => member.national_id === nationalId)) {
+        alert("رقم الهوية موجود بالفعل في النظام.");
+        return; // إيقاف إضافة البيانات إذا كانت الهوية مكررة
+      }
+
+      const member = {
+        name: document.getElementById('name').value,
+        national_id: nationalId,
+        spouse_name: document.getElementById('spouse_name').value,
+        spouse_national_id: document.getElementById('spouse_national_id').value,
+        phone_number: document.getElementById('phone_number').value,
+        family_members: document.getElementById('family_members').value,
+        males: document.getElementById('males').value,
+        females: document.getElementById('females').value,
+        under_3_years: document.getElementById('under_3_years').value,
+        from_3_to_5_years: document.getElementById('from_3_to_5_years').value,
+        males_under_16: document.getElementById('males_under_16').value,
+        females_under_16: document.getElementById('females_under_16').value,
+        males_above_16: document.getElementById('males_above_16').value,
+        females_above_16: document.getElementById('females_above_16').value
+      };
+
+      members.push(member);
+      localStorage.setItem('members', JSON.stringify(members));
+      displayData();
+      this.reset(); // إعادة تعيين النموذج بعد الإضافة
+    });
+
+    // دالة للتعديل على البيانات
+    function editData(index) {
+      const member = members[index];
+      document.getElementById('name').value = member.name;
+      document.getElementById('national_id').value = member.national_id;
+      document.getElementById('spouse_name').value = member.spouse_name;
+      document.getElementById('spouse_national_id').value = member.spouse_national_id;
+      document.getElementById('phone_number').value = member.phone_number;
+      document.getElementById('family_members').value = member.family_members;
+      document.getElementById('males').value = member.males;
+      document.getElementById('females').value = member.females;
+      document.getElementById('under_3_years').value = member.under_3_years;
+      document.getElementById('from_3_to_5_years').value = member.from_3_to_5_years;
+      document.getElementById('males_under_16').value = member.males_under_16;
+      document.getElementById('females_under_16').value = member.females_under_16;
+      document.getElementById('males_above_16').value = member.males_above_16;
+      document.getElementById('females_above_16').value = member.females_above_16;
+
+      // حذف العضو بعد التعديل ليتم استبداله
+      deleteData(index);
+    }
+
+    // دالة البحث
+function searchData() {
+  const searchInput = document.getElementById('searchInput').value.trim();
+  const filteredMembers = members.filter(member => member.national_id.includes(searchInput));
+  
+  // إعادة عرض البيانات في الجدول بناءً على البحث
+  const table = document.getElementById('membersTable');
+  table.innerHTML = '';
+
+  if (filteredMembers.length > 0) {
+    filteredMembers.forEach((member, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${member.name}</td>
+        <td>${member.national_id}</td>
+        <td>${member.spouse_name}</td>
+        <td>${member.spouse_national_id}</td>
+        <td>${member.phone_number}</td>
+        <td>${member.family_members}</td>
+        <td>${member.males}</td>
+        <td>${member.females}</td>
+        <td>${member.under_3_years}</td>
+        <td>${member.from_3_to_5_years}</td>
+        <td>${member.males_under_16}</td>
+        <td>${member.females_under_16}</td>
+        <td>${member.males_above_16}</td>
+        <td>${member.females_above_16}</td>
+        <td>
+          <button onclick="editData(${index})">
+            <img src="https://example.com/path/to/edit-icon.png" alt="تعديل" class="edit-icon">
+          </button>
+          <button onclick="deleteData(${index})">حذف</button>
+        </td>
+      `;
+      table.appendChild(row);
+    });
+  } else {
+    table.innerHTML = '<tr><td colspan="13">لا توجد بيانات تطابق رقم الهوية المدخل.</td></tr>';
+  }
+}
+
+
+    // دالة لحذف البيانات
+    function deleteData(index) {
+      members.splice(index, 1);
+      localStorage.setItem('members', JSON.stringify(members));
+      displayData();
+    }
+
+    function saveData() {
+  // تخزين البيانات في Local Storage
+  localStorage.setItem("members", JSON.stringify(members));
+}
+
+function loadData() {
+  const storedData = localStorage.getItem("members");
+  if (storedData) {
+    members = JSON.parse(storedData);
+    renderTable();
+  }
+}
+
+    // عرض البيانات عند تحميل الصفحة
+    displayData();
+  </script>
+
+</body>
+</html>
